@@ -112,13 +112,25 @@
       font-size: 12px;
       margin-top: 8px;
     }
+    th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+    th.sortable:hover {
+      background: #edf5ff;
+    }
+    .sort-ind {
+      margin-left: 6px;
+      color: #6e7f99;
+      font-size: 11px;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <section class="hero">
       <h1>Porownanie ofert wakacyjnych 2+2</h1>
-      <p class="sub">Zakres: 8 ofert (Turcja + kierunki poza Turcja), pobyty 7 nocy, all inclusive, rodzina 2+2.</p>
+      <p class="sub">Zakres: 10 ofert (Turcja + kierunki poza Turcja + Bulgaria), pobyty 7 nocy, all inclusive, rodzina 2+2.</p>
       <div class="chips">
         <span class="chip">Wagi rankingu: dzieci 40%</span>
         <span class="chip">Wagi rankingu: plaza 30%</span>
@@ -128,18 +140,18 @@
     </section>
 
     <section class="card">
-      <table>
+      <table id="offersTable">
         <thead>
           <tr>
-            <th>Ranking</th>
-            <th>Oferta</th>
-            <th>Kraj/region</th>
-            <th class="num">Kwota (2+2)</th>
-            <th>2+2</th>
-            <th>Wyzywienie</th>
-            <th>Ocena ogolna / dzieci</th>
-            <th>Lotnisko (odleglosc / czas)</th>
-            <th>Status budzetu (<= 14 000)</th>
+            <th class="sortable" data-type="number">Ranking <span class="sort-ind">↕</span></th>
+            <th class="sortable" data-type="text">Oferta <span class="sort-ind">↕</span></th>
+            <th class="sortable" data-type="text">Kraj/region <span class="sort-ind">↕</span></th>
+            <th class="num sortable" data-type="currency">Kwota (2+2) <span class="sort-ind">↕</span></th>
+            <th class="sortable" data-type="text">2+2 <span class="sort-ind">↕</span></th>
+            <th class="sortable" data-type="text">Wyzywienie <span class="sort-ind">↕</span></th>
+            <th class="sortable" data-type="rating">Ocena ogolna / dzieci <span class="sort-ind">↕</span></th>
+            <th class="sortable" data-type="text">Lotnisko (odleglosc / czas) <span class="sort-ind">↕</span></th>
+            <th class="sortable" data-type="text">Status budzetu (<= 14 000) <span class="sort-ind">↕</span></th>
             <th>Link</th>
           </tr>
         </thead>
@@ -240,10 +252,96 @@
             <td class="bad">NIE</td>
             <td><a href="https://www.wakacje.pl/oferty/hiszpania/majorka/el-arenal/globales-maioris-ex-ola-club-maioris-966942.html?od-2026-06-30,7-dni,all-inclusive,z-wroclawia,2dorosle-2dzieci-20181203-20200524" target="_blank" rel="noopener noreferrer">oferta</a></td>
           </tr>
+          <tr>
+            <td><span class="score">9</span></td>
+            <td><strong>MPM Kalina Garden</strong><div class="muted">Bardzo dobra cena, 200 m od plazy, miniklub i minidisco</div></td>
+            <td>Bulgaria / Sloneczny Brzeg</td>
+            <td class="num">8 224 zl</td>
+            <td>Tak</td>
+            <td>All Inclusive Premium</td>
+            <td>8.0 / 7.3</td>
+            <td>Burgas ok. 27 km, czas niepodany</td>
+            <td class="good">TAK</td>
+            <td><a href="https://www.wakacje.pl/oferty/bulgaria/sloneczny-brzeg/sloneczny-brzeg/mpm-kalina-garden-962673.html?od-2026-06-29,7-dni,all-inclusive,z-katowic,2dorosle-2dzieci-20181203-20200524" target="_blank" rel="noopener noreferrer">oferta</a></td>
+          </tr>
+          <tr>
+            <td><span class="score">10</span></td>
+            <td><strong>Mena Palace</strong><div class="muted">Najtansza oferta 2+2, pokoj family 2+2, blisko piaszczystej plazy</div></td>
+            <td>Bulgaria / Sloneczny Brzeg</td>
+            <td class="num">7 830 zl</td>
+            <td>Tak</td>
+            <td>All Inclusive</td>
+            <td>8.0 / 6.7</td>
+            <td>Burgas ok. 35 km, czas niepodany</td>
+            <td class="good">TAK</td>
+            <td><a href="https://www.wakacje.pl/oferty/bulgaria/sloneczny-brzeg/sloneczny-brzeg/mena-palace-963173.html?od-2026-06-29,7-dni,all-inclusive,z-katowic,2dorosle-2dzieci-20181203-20200524" target="_blank" rel="noopener noreferrer">oferta</a></td>
+          </tr>
         </tbody>
       </table>
       <p class="foot">Uwaga: Ceny i dostepnosc sa dynamiczne. W kilku ofertach czas transferu lotnisko-hotel nie byl podany wprost na karcie oferty.</p>
     </section>
   </div>
+  <script>
+    (function () {
+      const table = document.getElementById('offersTable');
+      if (!table) return;
+      const tbody = table.querySelector('tbody');
+      const headers = table.querySelectorAll('thead th.sortable');
+      let currentCol = -1;
+      let currentDir = 'asc';
+
+      function parseCurrency(text) {
+        const m = text.replace(/\s+/g, '').match(/(\d+)/g);
+        if (!m) return Number.POSITIVE_INFINITY;
+        return Number(m.join(''));
+      }
+
+      function parseRating(text) {
+        const parts = text.split('/').map(s => Number(s.trim().replace(',', '.')));
+        if (!parts.length || Number.isNaN(parts[0])) return -1;
+        const main = parts[0] || 0;
+        const child = parts[1] || 0;
+        return main * 10 + child;
+      }
+
+      function cellValue(row, colIndex, type) {
+        const cell = row.children[colIndex];
+        const txt = (cell ? cell.textContent : '').trim();
+        if (type === 'number') return Number(txt.replace(/[^0-9.-]/g, '')) || 0;
+        if (type === 'currency') return parseCurrency(txt);
+        if (type === 'rating') return parseRating(txt);
+        return txt.toLowerCase();
+      }
+
+      function sortBy(colIndex, type, dir) {
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        rows.sort((a, b) => {
+          const va = cellValue(a, colIndex, type);
+          const vb = cellValue(b, colIndex, type);
+          if (va < vb) return dir === 'asc' ? -1 : 1;
+          if (va > vb) return dir === 'asc' ? 1 : -1;
+          return 0;
+        });
+        rows.forEach(r => tbody.appendChild(r));
+      }
+
+      headers.forEach((th, idx) => {
+        th.addEventListener('click', () => {
+          const colIndex = th.cellIndex;
+          const type = th.dataset.type || 'text';
+          const dir = currentCol === colIndex && currentDir === 'asc' ? 'desc' : 'asc';
+          sortBy(colIndex, type, dir);
+          currentCol = colIndex;
+          currentDir = dir;
+          headers.forEach(h => {
+            const ind = h.querySelector('.sort-ind');
+            if (ind) ind.textContent = '↕';
+          });
+          const ind = th.querySelector('.sort-ind');
+          if (ind) ind.textContent = dir === 'asc' ? '↑' : '↓';
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
