@@ -168,9 +168,9 @@
 
     <section class="card">
       <div class="rating-tools">
-        <button type="button" class="btn" id="recalculateRanking">Przelicz ranking wg ocen</button>
+        <button type="button" class="btn" id="recalculateRanking">Przelicz ranking wg sredniej ocen</button>
         <button type="button" class="btn" id="resetRatings">Reset Twoich ocen</button>
-        <span class="muted">Ocena laczna = 70% oceny oferty (ogolna+dzieci) + 30% Twojej oceny.</span>
+        <span class="muted">Skala ocen: 1-5. Srednia jest liczona z uzupelnionych ocen (Anetka, Milka, Dami, Bartek).</span>
       </div>
       <table id="offersTable">
         <thead>
@@ -182,8 +182,11 @@
             <th class="sortable" data-type="text">2+2 <span class="sort-ind">↕</span></th>
             <th class="sortable" data-type="text">Wyzywienie <span class="sort-ind">↕</span></th>
             <th class="sortable" data-type="rating">Ocena ogolna / dzieci <span class="sort-ind">↕</span></th>
-            <th class="sortable" data-type="number">Twoja ocena (1-10) <span class="sort-ind">↕</span></th>
-            <th class="sortable" data-type="number">Ocena laczna <span class="sort-ind">↕</span></th>
+            <th class="sortable" data-type="number">Anetka (1-5) <span class="sort-ind">↕</span></th>
+            <th class="sortable" data-type="number">Milka (1-5) <span class="sort-ind">↕</span></th>
+            <th class="sortable" data-type="number">Dami (1-5) <span class="sort-ind">↕</span></th>
+            <th class="sortable" data-type="number">Bartek (1-5) <span class="sort-ind">↕</span></th>
+            <th class="sortable" data-type="number">Srednia (1-5) <span class="sort-ind">↕</span></th>
             <th class="sortable" data-type="text">Lotnisko (odleglosc / czas) <span class="sort-ind">↕</span></th>
             <th class="sortable" data-type="text">Status budzetu (<= 14 000) <span class="sort-ind">↕</span></th>
             <th>Link</th>
@@ -360,33 +363,65 @@
         return main * 10 + child;
       }
 
-      function parseOfferRatings(text) {
-        const parts = text.split('/').map(s => Number(s.trim().replace(',', '.')));
-        const overall = Number.isNaN(parts[0]) ? 0 : parts[0];
-        const kids = Number.isNaN(parts[1]) ? overall : parts[1];
-        return { overall, kids };
-      }
-
-      function combinedValue(row) {
-        const ratingCell = row.children[6];
-        const ownInput = row.querySelector('.user-rating');
-        const resultCell = row.querySelector('.combined-rating');
-        const parsed = parseOfferRatings((ratingCell ? ratingCell.textContent : '').trim());
-
-        // Bazowa ocena z serwisu: ogolna + dzieci
-        const baseScore = parsed.overall * 0.6 + parsed.kids * 0.4;
-        const ownScore = ownInput && ownInput.value ? Number(ownInput.value) : NaN;
-        const finalScore = Number.isNaN(ownScore)
-          ? baseScore
-          : baseScore * 0.7 + ownScore * 0.3;
-
-        if (resultCell) resultCell.textContent = finalScore.toFixed(2);
-        return finalScore;
-      }
-
-      function refreshCombinedRatings() {
+      function ensureTeamRatingColumns() {
         const rows = Array.from(tbody.querySelectorAll('tr'));
-        rows.forEach(row => combinedValue(row));
+        rows.forEach(row => {
+          const anetkaInput = row.querySelector('.user-rating');
+          if (!anetkaInput) return;
+
+          anetkaInput.min = '1';
+          anetkaInput.max = '5';
+          anetkaInput.step = '1';
+          anetkaInput.placeholder = '1-5';
+          anetkaInput.classList.add('rating-input-person', 'rating-anetka');
+
+          const anetkaCell = anetkaInput.closest('td');
+          if (!anetkaCell) return;
+
+          if (!row.querySelector('.rating-milka')) {
+            let cursor = anetkaCell;
+            ['milka', 'dami', 'bartek'].forEach(name => {
+              const td = document.createElement('td');
+              const input = document.createElement('input');
+              input.type = 'number';
+              input.min = '1';
+              input.max = '5';
+              input.step = '1';
+              input.placeholder = '1-5';
+              input.className = 'rating-input rating-input-person rating-' + name;
+              td.appendChild(input);
+              cursor.after(td);
+              cursor = td;
+            });
+          }
+
+          const avgCell = row.querySelector('.combined-rating');
+          if (avgCell) {
+            avgCell.classList.add('avg-rating');
+            avgCell.textContent = '-';
+          }
+        });
+      }
+
+      function averageValue(row) {
+        const values = Array.from(row.querySelectorAll('.rating-input-person'))
+          .map(input => Number(input.value))
+          .filter(v => Number.isFinite(v) && v >= 1 && v <= 5);
+
+        const avgCell = row.querySelector('.avg-rating');
+        if (!values.length) {
+          if (avgCell) avgCell.textContent = '-';
+          return null;
+        }
+
+        const avg = values.reduce((sum, v) => sum + v, 0) / values.length;
+        if (avgCell) avgCell.textContent = avg.toFixed(2);
+        return avg;
+      }
+
+      function refreshAverageRatings() {
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        rows.forEach(row => averageValue(row));
       }
 
       function updateRankBadges() {
@@ -397,9 +432,15 @@
         });
       }
 
-      function rerankByCombined() {
+      function rerankByAverage() {
         const rows = Array.from(tbody.querySelectorAll('tr'));
-        rows.sort((a, b) => combinedValue(b) - combinedValue(a));
+        rows.sort((a, b) => {
+          const av = averageValue(a);
+          const bv = averageValue(b);
+          const ax = av === null ? -1 : av;
+          const bx = bv === null ? -1 : bv;
+          return bx - ax;
+        });
         rows.forEach(r => tbody.appendChild(r));
         updateRankBadges();
       }
@@ -431,7 +472,7 @@
 
       headers.forEach((th, idx) => {
         th.addEventListener('click', () => {
-          refreshCombinedRatings();
+          refreshAverageRatings();
           const colIndex = th.cellIndex;
           const type = th.dataset.type || 'text';
           const dir = currentCol === colIndex && currentDir === 'asc' ? 'desc' : 'asc';
@@ -447,17 +488,19 @@
         });
       });
 
-      tbody.querySelectorAll('.user-rating').forEach(input => {
+      ensureTeamRatingColumns();
+
+      tbody.querySelectorAll('.rating-input-person').forEach(input => {
         input.addEventListener('input', () => {
           const row = input.closest('tr');
           if (!row) return;
-          combinedValue(row);
+          averageValue(row);
         });
       });
 
       if (recalcBtn) {
         recalcBtn.addEventListener('click', () => {
-          rerankByCombined();
+          rerankByAverage();
           currentCol = -1;
           currentDir = 'asc';
           headers.forEach(h => {
@@ -469,14 +512,14 @@
 
       if (resetBtn) {
         resetBtn.addEventListener('click', () => {
-          tbody.querySelectorAll('.user-rating').forEach(input => {
+          tbody.querySelectorAll('.rating-input-person').forEach(input => {
             input.value = '';
           });
-          refreshCombinedRatings();
+          refreshAverageRatings();
         });
       }
 
-      refreshCombinedRatings();
+      refreshAverageRatings();
     })();
   </script>
 </body>
