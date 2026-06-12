@@ -151,6 +151,30 @@
       border-radius: 6px;
       font-size: 13px;
     }
+    .sync-status {
+      border: 1px solid #d8e2f1;
+      background: #f8fbff;
+      color: #355070;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .sync-ok {
+      color: #157347;
+      border-color: #b9e0c8;
+      background: #edf9f1;
+    }
+    .sync-warn {
+      color: #9a6700;
+      border-color: #f0ddb2;
+      background: #fff8ea;
+    }
+    .sync-err {
+      color: #b42318;
+      border-color: #f3c6c2;
+      background: #fff1f0;
+    }
   </style>
 </head>
 <body>
@@ -170,6 +194,7 @@
       <div class="rating-tools">
         <button type="button" class="btn" id="recalculateRanking">Przelicz ranking wg sredniej ocen</button>
         <button type="button" class="btn" id="resetRatings">Reset ocen</button>
+        <span class="sync-status" id="syncStatus">Chmura: laczenie...</span>
         <span class="muted">Skala ocen: 1-5. Srednia jest liczona z uzupelnionych ocen (Anetka, Milka, Dami, Bartek).</span>
       </div>
       <table id="offersTable">
@@ -346,8 +371,11 @@
       const headers = table.querySelectorAll('thead th.sortable');
       const recalcBtn = document.getElementById('recalculateRanking');
       const resetBtn = document.getElementById('resetRatings');
+      const syncStatus = document.getElementById('syncStatus');
+      const SHARED_RATINGS_URL = 'https://jsonblob.com/api/jsonBlob/019ebb5f-4aa3-7abe-b933-43b3171d7637';
       let currentCol = -1;
       let currentDir = 'asc';
+      let saveTimer = null;
 
       function parseCurrency(text) {
         const m = text.replace(/\s+/g, '').match(/(\d+)/g);
@@ -424,6 +452,111 @@
         rows.forEach(row => averageValue(row));
       }
 
+      function setSyncStatus(text, type) {
+        if (!syncStatus) return;
+        syncStatus.textContent = text;
+        syncStatus.classList.remove('sync-ok', 'sync-warn', 'sync-err');
+        if (type === 'ok') syncStatus.classList.add('sync-ok');
+        if (type === 'warn') syncStatus.classList.add('sync-warn');
+        if (type === 'err') syncStatus.classList.add('sync-err');
+      }
+
+      function offerKey(row, index) {
+        const link = row.querySelector('a[href]');
+        const href = link ? link.getAttribute('href') : '';
+        return href ? href.split('?')[0] : 'offer-' + String(index);
+      }
+
+      function readRowRatings(row) {
+        const val = cls => {
+          const input = row.querySelector('.' + cls);
+          const n = input ? Number(input.value) : NaN;
+          return Number.isFinite(n) && n >= 1 && n <= 5 ? n : null;
+        };
+        return {
+          anetka: val('rating-anetka'),
+          milka: val('rating-milka'),
+          dami: val('rating-dami'),
+          bartek: val('rating-bartek')
+        };
+      }
+
+      function applyRowRatings(row, data) {
+        const set = (cls, value) => {
+          const input = row.querySelector('.' + cls);
+          if (!input) return;
+          input.value = value === null || value === undefined ? '' : String(value);
+        };
+        set('rating-anetka', data.anetka);
+        set('rating-milka', data.milka);
+        set('rating-dami', data.dami);
+        set('rating-bartek', data.bartek);
+      }
+
+      function buildPayload() {
+        const offers = {};
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        rows.forEach((row, idx) => {
+          offers[offerKey(row, idx)] = readRowRatings(row);
+        });
+        return {
+          updatedAt: new Date().toISOString(),
+          offers: offers
+        };
+      }
+
+      async function saveSharedRatings() {
+        if (!SHARED_RATINGS_URL) {
+          setSyncStatus('Chmura: brak konfiguracji', 'warn');
+          return;
+        }
+        setSyncStatus('Chmura: zapisywanie...', 'warn');
+        try {
+          const payload = buildPayload();
+          const response = await fetch(SHARED_RATINGS_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!response.ok) throw new Error('HTTP ' + String(response.status));
+          setSyncStatus('Chmura: zapisano', 'ok');
+        } catch (err) {
+          console.error('Save error', err);
+          setSyncStatus('Chmura: blad zapisu', 'err');
+        }
+      }
+
+      function scheduleSharedSave() {
+        if (saveTimer) clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+          saveSharedRatings();
+        }, 600);
+      }
+
+      async function loadSharedRatings() {
+        if (!SHARED_RATINGS_URL) {
+          setSyncStatus('Chmura: brak konfiguracji', 'warn');
+          return;
+        }
+        setSyncStatus('Chmura: pobieranie...', 'warn');
+        try {
+          const response = await fetch(SHARED_RATINGS_URL, { method: 'GET' });
+          if (!response.ok) throw new Error('HTTP ' + String(response.status));
+          const data = await response.json();
+          const offers = data && data.offers ? data.offers : {};
+          const rows = Array.from(tbody.querySelectorAll('tr'));
+          rows.forEach((row, idx) => {
+            const key = offerKey(row, idx);
+            if (offers[key]) applyRowRatings(row, offers[key]);
+          });
+          refreshAverageRatings();
+          setSyncStatus('Chmura: dane zaladowane', 'ok');
+        } catch (err) {
+          console.error('Load error', err);
+          setSyncStatus('Chmura: blad odczytu', 'err');
+        }
+      }
+
       function updateRankBadges() {
         const rows = Array.from(tbody.querySelectorAll('tr'));
         rows.forEach((row, idx) => {
@@ -495,6 +628,7 @@
           const row = input.closest('tr');
           if (!row) return;
           averageValue(row);
+          scheduleSharedSave();
         });
       });
 
@@ -516,10 +650,12 @@
             input.value = '';
           });
           refreshAverageRatings();
+          scheduleSharedSave();
         });
       }
 
       refreshAverageRatings();
+      loadSharedRatings();
     })();
   </script>
 </body>
