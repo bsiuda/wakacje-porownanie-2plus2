@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Porownanie ofert wakacyjnych 2+2</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #1f2430;
+      --muted: #5f697a;
+      --line: #dce1ea;
+      --good: #157347;
+      --warn: #9a6700;
+      --bad: #b42318;
+      --accent: #0b63ce;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      background: linear-gradient(180deg, #f8f9fc 0%, #eef2f8 100%);
+      color: var(--text);
+      line-height: 1.4;
+    }
+    .wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(14, 30, 62, 0.06);
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+    .sub {
+      margin: 0;
+      color: var(--muted);
+    }
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .chip {
+      border: 1px solid var(--line);
+      background: #f2f6ff;
+      color: #20498a;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 6px 18px rgba(14, 30, 62, 0.05);
+      margin-bottom: 18px;
+      overflow: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      padding: 10px 8px;
+      font-size: 14px;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: #f8fbff;
+      color: #183865;
+      z-index: 1;
+      font-size: 13px;
+      letter-spacing: .1px;
+    }
+    tr:hover td { background: #fbfdff; }
+    .num { text-align: right; white-space: nowrap; }
+    .muted { color: var(--muted); font-size: 12px; }
+    .good { color: var(--good); font-weight: 700; }
+    .warn { color: var(--warn); font-weight: 700; }
+    .bad  { color: var(--bad); font-weight: 700; }
+    .score {
+      font-weight: 800;
+      color: #102a4d;
+      background: #eaf2ff;
+      border: 1px solid #cdddf8;
+      border-radius: 6px;
+      display: inline-block;
+      padding: 2px 8px;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .foot {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Porownanie ofert wakacyjnych 2+2</h1>
+      <p class="sub">Zakres: 8 ofert (Turcja + kierunki poza Turcja), pobyty 7 nocy, all inclusive, rodzina 2+2.</p>
+      <div class="chips">
+        <span class="chip">Wagi rankingu: dzieci 40%</span>
+        <span class="chip">Wagi rankingu: plaza 30%</span>
+        <span class="chip">Wagi rankingu: cena 30%</span>
+        <span class="chip">Data opracowania: 2026-06-12</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Ranking</th>
+            <th>Oferta</th>
+            <th>Kraj/region</th>
+            <th class="num">Kwota (2+2)</th>
+            <th>2+2</th>
+            <th>Wyzywienie</th>
+            <th>Ocena ogolna / dzieci</th>
+            <th>Lotnisko (odleglosc / czas)</th>
+            <th>Status budzetu (<= 14 000)</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="score">1</span></td>
+            <td><strong>Mirage World</strong><div class="muted">Aquapark, 3 baseny dzieci, miniklub, blisko plazy</div></td>
+            <td>Turcja / Icmeler</td>
+            <td class="num">8 433 zl</td>
+            <td>Tak</td>
+            <td>All Inclusive</td>
+            <td>8.2 / 8.2</td>
+            <td>ok. 90 km (DLM) lub 140 km (BJV), czas niepodany</td>
+            <td class="good">TAK</td>
+            <td><a href="https://www.wakacje.pl/oferty/turcja/wybrzeze-egejskie/icmeler/mirage-world-811653.html?od-2026-06-30,7-dni,all-inclusive,z-katowic,2dorosle-2dzieci-20181203-20200524" target="_blank" rel="noopener noreferrer">oferta</a></td>
+          </tr>
+          <tr>
+            <td><span class="score">2</span></td>
+            <td><strong>Tusan Beach Resort</strong><div class="muted">Bezposrednio przy plazy, miniklub 4-12, AI Plus 24h</div></td>
+            <td>Turcja / Kusadasi</td>
+            <td class="num">10 843 zl</td>
+            <td>Tak</td>
+            <td>All Inclusive Plus (24h)</td>
+            <td>8.0 / 8.1</td>
+            <td>Brak twardego czasu w ofercie</td>
+            <td class="good">TAK</td>
+            <td><a href="https://www.wakacje.pl/oferty/turcja/wybrzeze-egejskie/kusadasi/tusan-beach-resort-679888.html?od-2026-06-30,7-dni,all-inclusive,z-rzeszowa,2dorosle-2dzieci-20181203-20200524" target="_blank" rel="noopener noreferrer">oferta</a></td>
+          </tr>
+          <tr>
+            <td><span class="score">3</span></td>
+            <td><strong>Kalogria Beach</strong><div class="muted">Miniklub, minidisco, aquapark; bezposrednio przy plazy</div></td>
+            <td>Grecja / Peloponez</td>
+            <td class="num">12 534 zl</td>
+            <td>Tak</td>
+            <td>All Inclusive</td>
+            <td>8.0 / 6.0</td>
+            <td>Czas dojazdu z lotniska ok. 10 min</td>
+            <td class="good">TAK</td>
+            <td><a href="https://www.wakacje.pl/oferty/grecja/peloponez/metochi/kalogria-beach-1145390.html?od-2026-06-30,7-dni,all-inclusive,z-katowic,2dorosle-2dzieci-20181203-20200524" target="_blank" rel="noopener noreferrer">oferta</a></td>
+          </tr>
+          <tr>
+            <td><span class="score">4</span></td>
+            <td><strong>CDS Hotels Terrasini</strong><div class="muted">Dobre atrakcje wodne, ale przy hotelu glownie skaliste zejscie</div></td>
+            <td>Wlochy / Sycylia</td>
+            <td class="num">13 478 zl</td>
+            <td>Tak</td>
+            <td>All Inclusive</td>
+            <td>8.1 / 8.1</td>
+            <td>Palermo ok. 17.5 km, czas niepodany</td>
+            <td class="good">TAK</td>
+            <td><a href="https://www.wakacje.pl/oferty/wlochy/sycylia/terrasini/cds-hotels-terrasini-ex-citta-del-mare-947036.html?od-2026-06-30,7-dni,all-inclusive,z-wroclawia,2dorosle-2dzieci-20181203-20200524" target="_blank" rel="noopener noreferrer">oferta</a></td>
+          </tr>
+          <tr>
+            <td><span class="score">5</span></td>
+            <td><strong>HTop Calella Palace &amp; Spa</strong><div class="muted">AI Soft, przyzwoita cena, srednie parametry rodzinne</div></td>
+            <td>Hiszpania / Costa Brava</td>
+            <td class="num">10 299 zl</td>
+            <td>Tak</td>
+            <td>All Inclusive Soft</td>
+            <td>8.1 / 7.1</td>
+            <td>Brak twardego czasu w ofercie</td>
+            <td class="good">TAK</td>
+            <td><a href="https://www.wakacje.pl/oferty/hiszpania/costa-brava/calella/htop-calella-palace-spa-664020.html?od-2026-06-30,7-dni,all-inclusive,z-wroclawia,2dorosle-2dzieci-20181203-20200524" target="_blank" rel="noopener noreferrer">oferta</a></td>
+          </tr>
+          <tr>
+            <td><span class="score">6</span></td>
+            <td><strong>Blue Star</strong><div class="muted">Dobra ocena ogolna, ale slabsza ocena atrakcji dla dzieci</div></td>
+            <td>Turcja / Alanya</td>
+            <td class="num">10 834 zl</td>
+            <td>Tak</td>
+            <td>All Inclusive</td>
+            <td>8.3 / 5.8</td>
+            <td>Czas dojazdu z lotniska ok. 120 min</td>
+            <td class="good">TAK</td>
+            <td><a href="https://www.wakacje.pl/oferty/turcja/riwiera-turecka/alanya/blue-star-1145200.html?od-2026-06-27,7-dni,all-inclusive,z-krakowa,2dorosle-2dzieci-20181203-20200524" target="_blank" rel="noopener noreferrer">oferta</a></td>
+          </tr>
+          <tr>
+            <td><span class="score">7</span></td>
+            <td><strong>Sol by Melia Cosmopolitan</strong><div class="muted">Bardzo dobre oceny, ale wysoka cena</div></td>
+            <td>Grecja / Rodos</td>
+            <td class="num">15 024 zl</td>
+            <td>Tak</td>
+            <td>All Inclusive</td>
+            <td>8.6 / 8.3</td>
+            <td>ok. 14 km od lotniska, czas niepodany</td>
+            <td class="bad">NIE</td>
+            <td><a href="https://www.wakacje.pl/oferty/grecja/rodos/ixia/sol-by-melia-cosmopolitan-ex-cosmopolitan-zeus-771620.html?od-2026-06-27,7-dni,all-inclusive,z-krakowa,2dorosle-2dzieci-20181203-20200524" target="_blank" rel="noopener noreferrer">oferta</a></td>
+          </tr>
+          <tr>
+            <td><span class="score">8</span></td>
+            <td><strong>Globales Maioris</strong><div class="muted">Dobra infrastruktura hotelowa, ale powyzej budzetu i slabsze warunki plazowe</div></td>
+            <td>Hiszpania / Majorka</td>
+            <td class="num">15 012 zl</td>
+            <td>Tak</td>
+            <td>All Inclusive</td>
+            <td>8.2 / 6.5</td>
+            <td>Palma ok. 16 km, ok. 20 min jazdy</td>
+            <td class="bad">NIE</td>
+            <td><a href="https://www.wakacje.pl/oferty/hiszpania/majorka/el-arenal/globales-maioris-ex-ola-club-maioris-966942.html?od-2026-06-30,7-dni,all-inclusive,z-wroclawia,2dorosle-2dzieci-20181203-20200524" target="_blank" rel="noopener noreferrer">oferta</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="foot">Uwaga: Ceny i dostepnosc sa dynamiczne. W kilku ofertach czas transferu lotnisko-hotel nie byl podany wprost na karcie oferty.</p>
+    </section>
+  </div>
+</body>
+</html>
