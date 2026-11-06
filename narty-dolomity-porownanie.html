@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d35">
+  <meta name="description" content="Porównanie 9 ofert narciarskich w Dolomitach na sezon 2026/2027: ceny, wyżywienie, dojazdy i oceny Google Maps.">
+  <title>Dolomity 2027 | Porównanie ofert narciarskich</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17241f;
+      --muted: #64736c;
+      --line: #dce4dd;
+      --paper: #f5f7f3;
+      --surface: #fff;
+      --pine: #173d35;
+      --pine-soft: #e8f0e9;
+      --orange: #bf542e;
+      --yellow: #e9c66c;
+      --shadow: 0 14px 32px rgba(27, 49, 39, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 15px/1.5 "Aptos", "Segoe UI", sans-serif;
+    }
+    a { color: inherit; }
+    .masthead {
+      min-height: 220px;
+      display: grid;
+      align-items: end;
+      background:
+        linear-gradient(90deg, rgba(15, 42, 34, .94) 0%, rgba(15, 42, 34, .76) 44%, rgba(15, 42, 34, .2) 100%),
+        url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2200&q=85") center 48% / cover,
+        #173d35;
+      color: #fff;
+    }
+    .masthead-inner, main, footer { width: min(1440px, 100%); margin-inline: auto; }
+    .masthead-inner { padding: 28px clamp(18px, 4vw, 52px) 25px; }
+    .eyebrow { margin: 0 0 9px; color: #e9c66c; font-size: 12px; font-weight: 800; text-transform: uppercase; }
+    h1 { max-width: 760px; margin: 0; font-size: clamp(29px, 4vw, 48px); line-height: 1.05; font-weight: 750; }
+    .lede { max-width: 750px; margin: 13px 0 0; color: #e0e9e3; font-size: 15px; }
+    main { padding: 24px clamp(14px, 3vw, 40px) 42px; }
+    .overview {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-block: 1px solid var(--line);
+      margin-bottom: 24px;
+      background: var(--surface);
+    }
+    .stat { min-height: 84px; padding: 15px 20px; border-right: 1px solid var(--line); }
+    .stat:last-child { border-right: 0; }
+    .stat-label { display: block; color: var(--muted); font-size: 12px; }
+    .stat-value { display: block; margin-top: 5px; font-size: 21px; font-weight: 760; }
+    .filters {
+      display: grid;
+      grid-template-columns: minmax(220px, 1.5fr) repeat(2, minmax(170px, 1fr)) auto;
+      align-items: end;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    label { display: grid; gap: 5px; color: var(--muted); font-size: 12px; font-weight: 650; }
+    input, select, button {
+      min-height: 42px;
+      border: 1px solid #cbd6ce;
+      border-radius: 4px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+    input, select { width: 100%; padding: 0 11px; }
+    input:focus, select:focus, button:focus-visible, a:focus-visible, summary:focus-visible {
+      outline: 3px solid rgba(191, 84, 46, .35);
+      outline-offset: 2px;
+    }
+    .reset { padding: 0 15px; cursor: pointer; font-weight: 700; }
+    .table-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 15px; margin: 0 0 9px; }
+    .table-heading h2 { margin: 0; font-size: 18px; }
+    #resultCount { color: var(--muted); font-size: 13px; }
+    .table-shell { overflow: auto; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow); }
+    table { width: 100%; min-width: 1160px; border-collapse: collapse; }
+    th, td { padding: 13px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { position: sticky; top: 0; z-index: 1; background: #edf2ec; color: #334940; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    th button { min-height: auto; padding: 0; border: 0; background: transparent; color: inherit; font-size: inherit; font-weight: inherit; text-align: left; text-transform: inherit; cursor: pointer; }
+    tbody tr.offer-row:hover td { background: #fbfcfa; }
+    tbody tr:last-child td { border-bottom: 0; }
+    .hotel-name { display: block; font-size: 15px; font-weight: 760; }
+    .hotel-place, .subline { color: var(--muted); font-size: 12px; }
+    .stars { color: #a76b16; letter-spacing: 0; white-space: nowrap; }
+    .rating-link { display: inline-grid; gap: 2px; color: inherit; text-decoration: none; white-space: nowrap; }
+    .rating-score { color: #9a6014; font-size: 15px; font-weight: 800; }
+    .review-count { color: var(--muted); font-size: 11px; text-decoration: underline; text-underline-offset: 2px; }
+    .pass-name { display: block; font-weight: 720; }
+    .region-name { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; }
+    .meal { display: inline-block; padding: 2px 7px; background: var(--pine-soft); color: var(--pine); font-size: 12px; font-weight: 800; }
+    .meal-description { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; }
+    .date { display: block; margin-top: 5px; color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .route-distance { display: block; font-size: 17px; font-weight: 780; white-space: nowrap; }
+    .route-time { display: block; color: var(--muted); font-size: 12px; }
+    .map-link, .offer-link { display: inline-block; margin-top: 5px; color: #a54527; font-size: 12px; font-weight: 750; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+    .price { display: block; color: var(--pine); font-size: 20px; font-weight: 800; white-space: nowrap; }
+    .price-note { display: block; color: var(--muted); font-size: 11px; }
+    .details-row td { padding: 0; background: #f8faf7; }
+    details { padding: 10px 12px; }
+    summary { width: fit-content; color: var(--pine); font-size: 12px; font-weight: 750; cursor: pointer; }
+    .detail-content { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 24px; padding: 12px 0 5px; }
+    .detail-item { margin: 0; color: #43534b; font-size: 13px; }
+    .detail-item strong { display: block; margin-bottom: 2px; color: var(--ink); font-size: 11px; text-transform: uppercase; }
+    .notes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+      padding: 15px 17px;
+      border-left: 3px solid var(--yellow);
+      background: #fffdf6;
+      color: #58665e;
+      font-size: 12px;
+    }
+    .notes p { margin: 0; }
+    footer { padding: 0 clamp(14px, 3vw, 40px) 26px; color: var(--muted); font-size: 11px; }
+    .empty { padding: 30px; color: var(--muted); text-align: center; }
+    @media (max-width: 760px) {
+      .masthead { min-height: 200px; }
+      .overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stat:nth-child(2) { border-right: 0; }
+      .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .filters { grid-template-columns: 1fr 1fr; }
+      .filters label:first-child { grid-column: 1 / -1; }
+      .reset { width: 100%; }
+      .detail-content { grid-template-columns: 1fr 1fr; }
+      .notes { grid-template-columns: 1fr; }
+    }
+    @media print {
+      body { background: #fff; }
+      .masthead { min-height: auto; background: var(--pine); print-color-adjust: exact; }
+      .masthead-inner { padding: 18px; }
+      main { padding: 14px 0; }
+      .filters, .map-link, .offer-link, footer { display: none; }
+      .table-shell { overflow: visible; box-shadow: none; }
+      table { min-width: 0; font-size: 10px; }
+      th, td { padding: 7px 5px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <p class="eyebrow">Włochy · sezon 2026/2027</p>
+      <h1>Narty w Dolomitach</h1>
+      <p class="lede">Porównanie 9 ofert SnowTrex dla 4 osób. Trasy samochodowe prowadzą z Bielska-Białej do najbliższego wskazanego wyciągu.</p>
+    </div>
+  </header>
+  <main>
+    <section class="overview" aria-label="Podsumowanie ofert">
+      <div class="stat"><span class="stat-label">Oferty w zestawieniu</span><strong class="stat-value">9</strong></div>
+      <div class="stat"><span class="stat-label">Najniższa cena z opłatami lokalnymi</span><strong class="stat-value">7 454 zł</strong></div>
+      <div class="stat"><span class="stat-label">Najkrótszy dojazd do wyciągu z Bielska</span><strong class="stat-value">806 km</strong></div>
+      <div class="stat"><span class="stat-label">Pobyty</span><strong class="stat-value">5 nocy</strong></div>
+    </section>
+
+    <section class="filters" aria-label="Filtrowanie ofert">
+      <label>Szukaj hotelu, miejscowości lub skipassu
+        <input id="searchInput" type="search" placeholder="np. Dobbiaco, 3 Zinnen, basen">
+      </label>
+      <label>Wyżywienie
+        <select id="mealFilter"><option value="">Wszystkie opcje</option></select>
+      </label>
+      <label>Region narciarski
+        <select id="regionFilter"><option value="">Wszystkie regiony</option></select>
+      </label>
+      <button class="reset" id="resetFilters" type="button">Wyczyść filtry</button>
+    </section>
+
+    <div class="table-heading">
+      <h2>Oferty i dojazd</h2>
+      <span id="resultCount" aria-live="polite"></span>
+    </div>
+    <div class="table-shell">
+      <table id="offersTable">
+        <thead>
+          <tr>
+            <th><button data-sort="name">Hotel / miejscowość ↕</button></th>
+            <th><button data-sort="googleRating">Google Maps ↕</button></th>
+            <th><button data-sort="region">Skipass / region ↕</button></th>
+            <th><button data-sort="meal">Wyżywienie / pobyt ↕</button></th>
+            <th><button data-sort="distance">Z Bielska do wyciągu ↕</button></th>
+            <th><button data-sort="price">Cena łącznie ↕</button></th>
+          </tr>
+        </thead>
+        <tbody id="offersBody"></tbody>
+      </table>
+    </div>
+
+    <aside class="notes" aria-label="Założenia i źródła">
+      <p><strong>Cena:</strong> łączna kwota z oferty dla 2 dorosłych i dzieci w wieku 8 i 6 lat, z wybranym w ofercie wyżywieniem, skipassem oraz podaną opłatą lokalną. Ceny i dostępność mogą się zmienić; BB nie jest przeliczane na HB ani odwrotnie.</p>
+      <p><strong>Trasa:</strong> najszybszy wariant samochodowy pokazany przez Google Maps 6.11.2026 do wskazanego wyciągu/terminalu. Czas zależy od ruchu i warunków. Lokalna odległość hotel–wyciąg pochodzi z opisu SnowTrex. Nazwa „region” odpowiada zakresowi skipassu.</p>
+      <p><strong>Oceny:</strong> średnia ocena i liczba opinii z Google Maps, sprawdzone 6.11.2026. Wartości mogą się zmieniać; kliknij ocenę, aby otworzyć profil hotelu.</p>
+    </aside>
+  </main>
+  <footer>Opracowanie na podstawie podlinkowanych ofert SnowTrex i tras Google Maps. Szczegóły skipassu, dostępność oraz aktualną cenę należy potwierdzić na stronie rezerwacji.</footer>
+
+  <script>
+    const offers = [
+      {
+        name: "Dolomites Hotel Union", stars: "3+", town: "Dobbiaco (Toblach)", googleRating: 4.4, googleReviews: 511, googleMapsQuery: "Hotel Union Dobbiaco Italy", region: "3 Zinnen Dolomites", pass: "Karnet 3 Zinnen Dolomites", meal: "HB", arrival: "21.03.2027", nights: 5, price: 7454,
+        lift: "Haunold / Sessellift Haunold Bergstation", hotelLift: "ok. 5 km do Haunold; autobus dla narciarzy ok. 50 m", routeKm: 806, routeTime: "9 godz. 11 min", mapsTo: "Sessellift Haunold Bergstation, 39038 Innichen, Italy",
+        offer: "https://www.snowtrex.pl/wlochy/toblach/dolomites_hotel_union/obiekt.html?offer=4028815c9aa9a4d9019ae4d5615d5494,20270321,5,4,0,33-33-6-8,0&v=1",
+        highlights: "Basen kryty i strefa wellness ok. 500 m²; sauna, jacuzzi i łaźnia parowa. W cenie m.in. karnet 3 Zinnen Dolomites.", room: "Pokój 2-osobowy z 2 dostawkami; hotel 3-gwiazdkowy superior. Zwierzęta (psy) dozwolone za dopłatą."
+      },
+      {
+        name: "Hotel Jonathan", stars: "4", town: "Natz k. Rio di Pusteria", googleRating: 4.7, googleReviews: 270, googleMapsQuery: "Hotel Jonathan Natz bei Brixen Italy", region: "Gitschberg Jochtal – Brixen", pass: "Karnet Gitschberg Jochtal – Brixen", meal: "HB", arrival: "21.03.2027", nights: 5, price: 8375,
+        lift: "Gitschbergbahn Mittelstation", hotelLift: "ok. 16,5 km do Gitschbergbahn; ok. 19,5 km do Plose", routeKm: 928, routeTime: "9 godz. 52 min", mapsTo: "Gitschbergbahn Mittelstation, Maranza, Italy",
+        offer: "https://www.snowtrex.pl/wlochy/rio_di_pusteria_niem._muhlbach_im_pustertal/hotel_jonathan/obiekt.html?offer=4028815c95bbe8f301963dad207d19f1,20270321,5,4,0,33-33-6-8,0&v=1",
+        highlights: "Rozbudowana strefa wellness ok. 700 m² i podgrzewany basen zewnętrzny. Ski-bus ok. 290 m od hotelu.", room: "Wyceniony pokój Junior Suite 30–33 m² dla 4 osób. HB obejmuje śniadanie i 4-daniową kolację."
+      },
+      {
+        name: "Hotel Marica", stars: "4", town: "Eggen / Obereggen", googleRating: 4.8, googleReviews: 212, googleMapsQuery: "Hotel Marica Eggen Obereggen Italy", region: "Val di Fiemme – Obereggen", pass: "Karnet Val di Fiemme – Obereggen", meal: "HB PLUS", arrival: "21.03.2027", nights: 5, price: 9551,
+        lift: "Ski Center Latemar / Obereggen", hotelLift: "ok. 5 km do Obereggen–Oberholz; ok. 5,1 km do Ochsenweide", routeKm: 971, routeTime: "10 godz. 13 min", mapsTo: "Ski Center Latemar, Via Obereggen 16, 39050 Obereggen BZ, Italy",
+        offer: "https://www.snowtrex.pl/wlochy/obereggen/hotel_marica/obiekt.html?offer=3f27805c9ea66606019eb107a6481374,20270321,5,4,0,33-33-6-8,0&v=1",
+        highlights: "Basen kryty, sauna fińska i łaźnia parowa w strefie wellness ok. 450 m². Ski-bus przy obiekcie; transfer do wyciągów płatny.", room: "HB PLUS: śniadanie, podwieczorek i 5-daniowa kolacja. Wyceniony pokój z 2 dostawkami."
+      },
+      {
+        name: "Hotel Bacher", stars: "3", town: "Rein in Taufers / Campo Tures", googleRating: 4.3, googleReviews: 385, googleMapsQuery: "Hotel Bacher Rein in Taufers Italy", region: "Skiworld Ahrntal", pass: "Karnet Skiworld Ahrntal", meal: "HB", arrival: "21.03.2027", nights: 5, price: 10685,
+        lift: "Speikboden Skiworld Ahrntal", hotelLift: "ok. 13 km do Speikboden; ski-bus ok. 10 m od hotelu", routeKm: 849, routeTime: "9 godz. 51 min", mapsTo: "Speikboden Skiworld Ahrntal, Costa di Tures 7, 39032 Campo Tures BZ, Italy",
+        offer: "https://www.snowtrex.pl/wlochy/campo_tures/hotel_bacher/obiekt.html?offer=4028815c9ca2428a019d203f66230714,20270321,5,4,0,33-33-6-8,0&v=1",
+        highlights: "Basen kryty, sauna, łaźnia parowa i kabina na podczerwień. Ski-bus zatrzymuje się niemal przy wejściu.", room: "Wyceniony pokój rodzinny ok. 38 m² dla 2 dorosłych i 2 dzieci. HB z 3-daniową kolacją."
+      },
+      {
+        name: "Hotel Lagorai", stars: "4", town: "Cavalese", googleRating: 4.6, googleReviews: 1015, googleMapsQuery: "Hotel Lagorai Cavalese Italy", region: "Val di Fiemme – Obereggen", pass: "Karnet Val di Fiemme – Obereggen", meal: "HB PLUS", arrival: "20.03.2027", nights: 5, price: 10681,
+        lift: "Alpe Cermis Risalita", hotelLift: "ok. 1,5 km do Alpe Cermis; ski-bus przy hotelu", routeKm: 1001, routeTime: "10 godz. 38 min", mapsTo: "Alpe Cermis Risalita, SP232, 38033 Cavalese TN, Italy",
+        offer: "https://www.snowtrex.pl/wlochy/cavalese/hotel_lagorai/obiekt.html?offer=4028815c9aa9a4d9019ada0e4f422bf8,20270320,5,4,0,33-33-6-8,0&v=1",
+        highlights: "Basen kryty, sauna i łaźnia parowa. Miniclub pojawia się w ofercie tylko w określonym terminie świątecznym.", room: "Wyceniony Junior Suite dla 4 osób. HB PLUS obejmuje śniadanie, przekąski i 4-daniową kolację."
+      },
+      {
+        name: "Feldthurnerhof", stars: "4", town: "Velturno (Feldthurns)", googleRating: 4.5, googleReviews: 382, googleMapsQuery: "feldthurnerhof vinum-natur-relax Velturno Italy", region: "Gitschberg Jochtal – Brixen", pass: "Karnet Gitschberg Jochtal – Brixen", meal: "HB", arrival: "21.03.2027", nights: 5, price: 10956,
+        lift: "Plosebahn", hotelLift: "ok. 18,7 km do Plose; transfer do terenu narciarskiego", routeKm: 926, routeTime: "9 godz. 46 min", mapsTo: "Plosebahn, Seilbahnstraße, 39042 Brixen, Italy",
+        offer: "https://www.snowtrex.pl/wlochy/velturno/panorama_wellnesshotel_feldthurnerhof/obiekt.html?offer=3f27805ca0db878f01a0ec8b8698282f,20270321,5,4,0,33-33-6-8,0&v=1",
+        highlights: "Basen kryty, jacuzzi i kilka rodzajów saun. Hotel deklaruje transfer na tereny narciarskie.", room: "Wyceniony pokój 25 m² z 2 dostawkami. HB obejmuje bufet śniadaniowy i 4-daniową kolację."
+      },
+      {
+        name: "Hotel Fronza", stars: "4", town: "Luttach / San Giovanni", googleRating: 4.7, googleReviews: 390, googleMapsQuery: "Hotel Fronza San Giovanni Ahrntal Italy", region: "Skiworld Ahrntal", pass: "Karnet Skiworld Ahrntal", meal: "HB", arrival: "21.03.2027", nights: 5, price: 12640,
+        lift: "Speikboden Skiworld Ahrntal", hotelLift: "ok. 2,5 km do Speikboden; ski-bus ok. 150 m", routeKm: 849, routeTime: "9 godz. 51 min", mapsTo: "Speikboden Skiworld Ahrntal, Costa di Tures 7, 39032 Campo Tures BZ, Italy",
+        offer: "https://www.snowtrex.pl/wlochy/san_giovanni_niem._st._johann_im_ahrntal/hotel_fronza/obiekt.html?offer=4028815c97b4702e0198085b3ebc3654,20270321,5,4,0,33-33-6-8,0&v=1",
+        highlights: "Basen kryty, jacuzzi, sauna i łaźnia parowa. Hotel wskazany przez SnowTrex jako położony praktycznie przy stoku.", room: "Wyceniony pokój rodzinny ok. 50 m². HB z bufetem śniadaniowym i 4-daniową kolacją."
+      },
+      {
+        name: "Active Alm Moena", stars: "4", town: "Moena", googleRating: 4.8, googleReviews: 250, googleMapsQuery: "Active Alm Moena Italy", region: "Alpe Lusia – San Pellegrino", pass: "Karnet Alpe Lusia – San Pellegrino", meal: "HB PLUS", arrival: "20.03.2027", nights: 5, price: 11336,
+        lift: "Ski Area Alpe Lusia / Valbona", hotelLift: "ok. 3 km do Lusia Valbona; ski-bus ok. 300 m", routeKm: 994, routeTime: "10 godz. 47 min", mapsTo: "Ski Area Alpe Lusia, Località I Ronc 4, 38035 Moena TN, Italy",
+        offer: "https://www.snowtrex.pl/wlochy/moena/active_alm_moena/obiekt.html?offer=4028815c9e52a8be019e8d06092b63b5,20270320,5,4,0,33-33-6-8,0&v=1",
+        highlights: "Podgrzewany basen kryty i zewnętrzny, sauna, łaźnia parowa i jacuzzi.", room: "Wyceniony pokój z 2 dostawkami. HB PLUS obejmuje bufet śniadaniowy, podwieczorek i 3-daniową kolację."
+      },
+      {
+        name: "Hotel Rodes", stars: "3", town: "Ortisei (St. Ulrich)", googleRating: 4.1, googleReviews: 374, googleMapsQuery: "Hotel Rodes Ortisei Italy", region: "Val Gardena / Alpe di Siusi", pass: "Karnet Val Gardena / Alpe di Siusi", meal: "HB", arrival: "20.03.2027", nights: 5, price: 11665,
+        lift: "Mont Sëuc / Seilbahnen St. Ulrich – Seiser Alm", hotelLift: "ok. 1,5 km do Mont Sëuc; transfer do wyciągu", routeKm: 945, routeTime: "9 godz. 57 min", mapsTo: "Seilbahnen St.Ulrich - Seiser Alm, Via Setil 9, 39046 Ortisei BZ, Italy",
+        offer: "https://www.snowtrex.pl/wlochy/ortisei_niem._st._ulrich/hotel_rodes/obiekt.html?offer=4028815c97b4702e0197cb7bf5d42996,20270320,5,4,0,33-33-6-8,0&v=1",
+        highlights: "Strefa wellness ok. 350 m² z basenem krytym, sauną i łaźnią parową. Przystanek autobusowy przed hotelem.", room: "Wyceniony pokój standardowy z 2 dostawkami. HB obejmuje bufet śniadaniowy i 3-daniową kolację."
+      }
+    ];
+
+    const body = document.getElementById("offersBody");
+    const searchInput = document.getElementById("searchInput");
+    const mealFilter = document.getElementById("mealFilter");
+    const regionFilter = document.getElementById("regionFilter");
+    const resultCount = document.getElementById("resultCount");
+    let sortBy = "price";
+    let sortDirection = 1;
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (character) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
+      })[character]);
+    }
+
+    function mapsUrl(offer) {
+      return "https://www.google.com/maps/dir/?api=1&origin=Bielsko-Bia%C5%82a%2C+Polska&destination=" + encodeURIComponent(offer.mapsTo) + "&travelmode=driving";
+    }
+
+    function googleMapsUrl(offer) {
+      return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(offer.googleMapsQuery);
+    }
+
+    function formatRating(rating) {
+      return new Intl.NumberFormat("pl-PL", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(rating);
+    }
+
+    function mealDescription(meal) {
+      return {
+        BB: "nocleg ze śniadaniem",
+        HB: "śniadanie i obiadokolacja",
+        "HB PLUS": "HB plus popołudniowa przekąska"
+      }[meal];
+    }
+
+    function formatPrice(price) {
+      return new Intl.NumberFormat("pl-PL").format(price);
+    }
+
+    function populateFilters() {
+      [...new Set(offers.map((offer) => offer.meal))].sort().forEach((meal) => {
+        mealFilter.insertAdjacentHTML("beforeend", `<option value="${escapeHtml(meal)}">${escapeHtml(meal)}</option>`);
+      });
+      [...new Set(offers.map((offer) => offer.region))].sort().forEach((region) => {
+        regionFilter.insertAdjacentHTML("beforeend", `<option value="${escapeHtml(region)}">${escapeHtml(region)}</option>`);
+      });
+    }
+
+    function render() {
+      const query = searchInput.value.trim().toLocaleLowerCase("pl");
+      const filtered = offers
+        .filter((offer) => !mealFilter.value || offer.meal === mealFilter.value)
+        .filter((offer) => !regionFilter.value || offer.region === regionFilter.value)
+        .filter((offer) => !query || [offer.name, offer.town, offer.region, offer.pass, offer.highlights].join(" ").toLocaleLowerCase("pl").includes(query))
+        .sort((left, right) => {
+          const sortKey = sortBy === "distance" ? "routeKm" : sortBy;
+          const a = sortKey === "price" || sortKey === "routeKm" || sortKey === "googleRating" ? left[sortKey] : left[sortKey].toLocaleLowerCase("pl");
+          const b = sortKey === "price" || sortKey === "routeKm" || sortKey === "googleRating" ? right[sortKey] : right[sortKey].toLocaleLowerCase("pl");
+          return (a < b ? -1 : a > b ? 1 : 0) * sortDirection;
+        });
+
+      resultCount.textContent = `${filtered.length} ${filtered.length === 1 ? "oferta" : "ofert"}`;
+      body.innerHTML = filtered.length ? filtered.map((offer) => `
+        <tr class="offer-row">
+          <td><span class="hotel-name">${escapeHtml(offer.name)} <span class="stars" aria-label="${escapeHtml(offer.stars)} gwiazdki">${"★".repeat(Number(offer.stars[0]))}${offer.stars.includes("+") ? "+" : ""}</span></span><span class="hotel-place">${escapeHtml(offer.town)}</span><a class="offer-link" href="${escapeHtml(offer.offer)}" target="_blank" rel="noopener noreferrer">Otwórz ofertę SnowTrex ↗</a></td>
+          <td><a class="rating-link" href="${escapeHtml(googleMapsUrl(offer))}" target="_blank" rel="noopener noreferrer" aria-label="Ocena Google Maps ${formatRating(offer.googleRating)} na podstawie ${offer.googleReviews} opinii"><span class="rating-score">★ ${formatRating(offer.googleRating)}</span><span class="review-count">${offer.googleReviews} opinii</span></a></td>
+          <td><span class="pass-name">${escapeHtml(offer.pass)}</span><span class="region-name">${escapeHtml(offer.region)}</span></td>
+          <td><span class="meal">${escapeHtml(offer.meal)}</span><span class="meal-description">${escapeHtml(mealDescription(offer.meal))}</span><span class="date">${escapeHtml(offer.arrival)} · ${offer.nights} nocy</span></td>
+          <td><span class="route-distance">${offer.routeKm} km</span><span class="route-time">ok. ${escapeHtml(offer.routeTime)} samochodem</span><a class="map-link" href="${escapeHtml(mapsUrl(offer))}" target="_blank" rel="noopener noreferrer">Trasa Google Maps ↗</a></td>
+          <td><span class="price">${formatPrice(offer.price)} zł</span><span class="price-note">4 osoby · z opłatą lokalną</span></td>
+        </tr>
+        <tr class="details-row"><td colspan="6"><details><summary>Najważniejsze informacje i dojazd lokalny</summary><div class="detail-content">
+          <p class="detail-item"><strong>Hotel</strong>${escapeHtml(offer.room)}</p>
+          <p class="detail-item"><strong>Na miejscu</strong>${escapeHtml(offer.highlights)}</p>
+          <p class="detail-item"><strong>Do najbliższego wyciągu z hotelu</strong>${escapeHtml(offer.hotelLift)}. Odległość według opisu SnowTrex.</p>
+          <p class="detail-item"><strong>Wskazany wyciąg Google Maps</strong>${escapeHtml(offer.lift)}</p>
+          <p class="detail-item"><strong>Cena</strong>${formatPrice(offer.price)} zł dla 2 dorosłych i dzieci w wieku 8 i 6 lat, z wybranym wyżywieniem i skipassem. Ceny mogą się zmienić.</p>
+          <p class="detail-item"><strong>Trasa z Bielska-Białej</strong>${offer.routeKm} km · ok. ${escapeHtml(offer.routeTime)}. Trasa może obejmować płatne odcinki; aktualne warunki sprawdź w Google Maps.</p>
+        </div></details></td></tr>`).join("") : `<tr><td class="empty" colspan="6">Brak ofert spełniających wybrane kryteria.</td></tr>`;
+    }
+
+    document.querySelectorAll("th button[data-sort]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const key = button.dataset.sort;
+        sortDirection = sortBy === key ? sortDirection * -1 : 1;
+        sortBy = key;
+        render();
+      });
+    });
+    [searchInput, mealFilter, regionFilter].forEach((control) => {
+      control.addEventListener("input", render);
+      control.addEventListener("change", render);
+    });
+    document.getElementById("resetFilters").addEventListener("click", () => {
+      searchInput.value = "";
+      mealFilter.value = "";
+      regionFilter.value = "";
+      sortBy = "price";
+      sortDirection = 1;
+      render();
+    });
+
+    populateFilters();
+    render();
+  </script>
+</body>
+</html>
